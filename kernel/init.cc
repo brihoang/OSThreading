@@ -9,9 +9,8 @@ Init::Init() : Process("init",nullptr) {
 
 long Init::run() {
     SimpleQueue<const char*> argv;
-    argv.addTail(K::strdup("shell"));
 
-    execv("shell",&argv,1);
+    execv("main",&argv,0);
 
     Debug::shutdown("What?");
     return 0;
