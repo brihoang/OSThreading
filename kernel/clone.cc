@@ -4,10 +4,11 @@
 
 Clone::Clone(Process *parent) : Process("child",parent->resources->forkMe()) {
 	Process::disable();
-	//AddressSpace *addressSpace = (AddressSpace*)resources->get(addressSpaceId, ResourceType::ADDRESS_SPACE);
 	resources->close(addressSpaceId);
-	//AddressSpace *parentAddressSpace = (AddressSpace*)parent->resources->get(parent->addressSpaceId, ResourceType::ADDRESS_SPACE);
 	addressSpaceId = parent->addressSpaceId;
+	//AddressSpace *addressSpace = (AddressSpace*)resources->get(addressSpaceId, ResourceType::ADDRESS_SPACE);
+	//AddressSpace *parentAddressSpace = (AddressSpace*)parent->resources->get(parent->addressSpaceId, ResourceType::ADDRESS_SPACE);
+	//Debug::printf("%p %p\n", addressSpace, parentAddressSpace);
 	//addressSpace->pd = parentAddressSpace->pd;
 } 
 
