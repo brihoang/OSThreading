@@ -12,9 +12,11 @@ int main(){
 
 	if(id == 0){
 		puts("child\n");
+		puts("i am definitely in the child\n");
 	}
 	else
 		puts("parent\n");
+	
 
 	return 0;
 }

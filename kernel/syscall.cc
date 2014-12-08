@@ -3,6 +3,7 @@
 #include "idt.h"
 #include "process.h"
 #include "child.h"
+#include "clone.h"
 #include "fs.h"
 #include "err.h"
 #include "u8250.h"
@@ -144,11 +145,22 @@ extern "C" long syscallHandler(uint32_t* context, long num, long a0, long a1) {
 			//void *stack = (void*)a0;
             uint32_t userPC = context[8];
             //uint32_t userESP = context[11];
-            Child *child = new Child(Process::current);
+            Clone *child = new Clone(Process::current);
 
+			void *stack = (void*)context[11];	
+			void *userStack = (void*)(a0 - 4*5);	
+			memcpy(userStack, stack, 20);
+
+			//long*userStack1 = (long*)userStack;
+			///long*stack1 = (long*)stack;
+
+			//Debug::printf("%x %x %x %x %x\n", userStack1[0], userStack1[1], userStack1[2], userStack1[3], userStack1[4]);
+			//Debug::printf("%x %x %x %x %x\n", stack1[0], stack1[1], stack1[2], stack1[3], stack1[4]);
+
+			//stack1[4] = 5;
 
             child->pc = userPC;
-			child->esp = context[11];
+			child->esp = (long)userStack;
             child->eax = 0;
             long id = Process::current->resources->open(child);
             child->start();

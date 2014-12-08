@@ -5,7 +5,7 @@
 
 class Clone : public Process{
 public:
-	Clone(Process *parent, uint32_t eax, uint32_t esp, uint32_t pc);
+	Clone(Process *parent);
 	virtual long run();
 	uint32_t eax;
 	uint32_t esp;
