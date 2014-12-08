@@ -3,7 +3,6 @@
 #include "err.h"
 
 Clone::Clone(Process *parent) : Process("child",parent->resources->forkMe()) {
-	Process::disable();
 	resources->close(addressSpaceId);
 	addressSpaceId = parent->addressSpaceId;
 	//AddressSpace *addressSpace = (AddressSpace*)resources->get(addressSpaceId, ResourceType::ADDRESS_SPACE);

@@ -151,14 +151,6 @@ extern "C" long syscallHandler(uint32_t* context, long num, long a0, long a1) {
 			void *userStack = (void*)(a0 - 4*5);	
 			memcpy(userStack, stack, 20);
 
-			//long*userStack1 = (long*)userStack;
-			///long*stack1 = (long*)stack;
-
-			//Debug::printf("%x %x %x %x %x\n", userStack1[0], userStack1[1], userStack1[2], userStack1[3], userStack1[4]);
-			//Debug::printf("%x %x %x %x %x\n", stack1[0], stack1[1], stack1[2], stack1[3], stack1[4]);
-
-			//stack1[4] = 5;
-
             child->pc = userPC;
 			child->esp = (long)userStack;
             child->eax = 0;
@@ -166,6 +158,11 @@ extern "C" long syscallHandler(uint32_t* context, long num, long a0, long a1) {
             child->start();
 
             return id;
+		}
+	case 16:
+		{
+			Process::current->yield();	
+			return 0;
 		}
     default:
         Process::trace("syscall(%d,%d,%d)",num,a0,a1);

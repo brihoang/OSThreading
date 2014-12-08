@@ -167,3 +167,11 @@ getchar:
 	int $100
 	ret
 
+	# long yield()
+	.global yield
+yield:
+	mov $16, %eax
+	int $100
+	ret
+
+

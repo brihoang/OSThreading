@@ -1,19 +1,26 @@
 #include "libc.h"
-#include "sys.h"
 #include "threads.h"
 
-int thread_create(thread_t *thread, void *(*start_routine)(void*), void *args){
-	return 0;
+int thread_create(void (*start_routine)(void*), void *args){
+	long stack = (long)malloc(4096) + 4092;
+	long id = clone(stack);
+	if(id == 0){
+		start_routine(args);	
+		thread_exit(0);
+	}else{
+		return id;	
+	}
+	return -1;
 }
 
-int thread_exit(){
-	return 0;
+int thread_exit(long exitCode){
+	return exit(exitCode);	
 }
 
-int thread_join(thread_t *thread){
-	return 0;
+int thread_join(long id){
+	return join(id);
 }
 
 int thread_yield(){
-	return 0;
+	return yield();
 }

@@ -163,7 +163,6 @@ long Process::execv(const char* fileName, SimpleQueue<const char*> *args, long a
 
 	*(char***)(userESP + 4) = (char **)0xBBBBBEE0;
 	
-	Debug::printf("about to prepare addressSpace\n");
   
     /* clear resources */
     resources->closeAll();
