@@ -139,6 +139,22 @@ extern "C" long syscallHandler(uint32_t* context, long num, long a0, long a1) {
         {
               return U8250::it->get();
         }
+	case 15: /* clone */
+		{
+			//void *stack = (void*)a0;
+            uint32_t userPC = context[8];
+            //uint32_t userESP = context[11];
+            Child *child = new Child(Process::current);
+
+
+            child->pc = userPC;
+			child->esp = context[11];
+            child->eax = 0;
+            long id = Process::current->resources->open(child);
+            child->start();
+
+            return id;
+		}
     default:
         Process::trace("syscall(%d,%d,%d)",num,a0,a1);
         return -1;

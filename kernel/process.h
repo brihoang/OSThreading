@@ -93,7 +93,11 @@ public:
     Event doneEvent;
 
     // Address space for this process
-    AddressSpace addressSpace;
+    //AddressSpace *addressSpace;
+	
+	// id within resources table of addressSpace
+	long addressSpaceId;
+	
 
     // Resources
     Table *resources;

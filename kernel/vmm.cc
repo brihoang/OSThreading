@@ -6,6 +6,7 @@
 #include "gdt.h"
 #include "libk.h"
 #include "err.h"
+#include "resource.h"
 
 PhysMem::Node *PhysMem::firstFree = 0;
 uint32_t PhysMem::avail;
@@ -52,7 +53,7 @@ void PhysMem::free(uint32_t p) {
 }
 
 
-AddressSpace::AddressSpace() {
+AddressSpace::AddressSpace() : Resource(ResourceType::ADDRESS_SPACE){
     pd = (uint32_t*) PhysMem::alloc();
     for (uint32_t va = PhysMem::FRAME_SIZE;
         va < PhysMem::limit;
@@ -193,5 +194,6 @@ extern "C" void vmm_pageFault(long* context, uintptr_t va) {
         }
         Debug::panic("page fault @ 0x%08x without current process",va);
     }
-    proc->addressSpace.handlePageFault(context,va);
+	AddressSpace *addressSpace = (AddressSpace*)proc->resources->get(proc->addressSpaceId, ResourceType::ADDRESS_SPACE);
+    addressSpace->handlePageFault(context,va);
 }
