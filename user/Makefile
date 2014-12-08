@@ -14,7 +14,7 @@ shutdown : CFILES=shutdown.c libc.c heap.c
 
 cat : CFILES=cat.c libc.c heap.c
 
-main : CFILES=main.c libc.c heap.c
+main : CFILES=main.c libc.c heap.c threads.c
 
 $(PROGS) : % : Makefile $(OFILES)
 	ld -N -m elf_i386 -e start -Ttext=0x80000000 -o $@ $(OFILES)
