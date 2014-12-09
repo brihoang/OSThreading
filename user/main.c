@@ -1,19 +1,38 @@
 #include "libc.h"
 #include "threads.h"
 
-void test(void* args){
-	for(int i = 0; i < 200; i++)
-			puts("hello");
-}
+void test1(void* args);
+void test2(void* args);
 
 int main(){
-    puts("Starting main.c\n");
-	long id = thread_create(test, (void*)0);
-	thread_join(id);
-	for(int i = 0; i < 200; i++){
-		putdec(i+1);
-		puts("\n");
-	}
-	shutdown();
-	return 0;
+    puts("testing threads\n");
+    puts("basic thread create\n");
+
+    long id = thread_create(test1, (void*)0);
+
+    thread_join(id);
+    puts("thread done!\n");
+
+    char *word = "hello";
+    puts(word);
+
+    id = thread_create(test2, word);
+    thread_join(id);
+
+    puts("word has been changed!\n");
+
+    puts(word);
+
+    shutdown();
+    return 0;
+}
+
+void test1(void* args){
+    puts("thread\n");
+}
+
+void test2(void* args){
+    char *word = (char*)args;
+
+    word[0] = 'q';
 }
