@@ -9,6 +9,7 @@ enum ResourceType {
     SEMAPHORE,
     FILE,
     TABLE,
+	ADDRESS_SPACE,
     OTHER
 };
 

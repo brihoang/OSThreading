@@ -44,7 +44,10 @@ long Table::close(long i) {
 
 void Table::closeAll() {
     mutex.lock();
+	Debug::printf("");
     for (int i=0; i<n; i++) {
+		if(array[i] && array[i]->type == ResourceType::ADDRESS_SPACE)
+			continue;
         Resource::unref(array[i]);
         array[i] = nullptr;
     }

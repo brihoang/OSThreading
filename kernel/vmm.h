@@ -2,6 +2,7 @@
 #define _VMM_H_
 
 #include "stdint.h"
+#include "resource.h"
 
 // The physical memory interface
 class PhysMem {
@@ -23,11 +24,11 @@ public:
     static void free(uint32_t);
 };
 
-class AddressSpace {
-    uint32_t *pd;
+class AddressSpace : public Resource {
 private:
     uint32_t& getPTE(uint32_t va);
 public:
+    uint32_t *pd;
     static constexpr uint32_t P = 1;
     static constexpr uint32_t W = 2;
     static constexpr uint32_t U = 4;

@@ -10,6 +10,7 @@
 #include "fs.h"
 #include "err.h"
 #include "libk.h"
+#include "resource.h"
 
 /* global process declarations */
 Debug* Process::DEBUG;                       // the debug channel
@@ -71,6 +72,8 @@ extern "C" void runProcess() {
 Process::Process(const char* name, Table *resources_) : 
     Resource(ResourceType::PROCESS), name(name), resources(resources_)
 {
+	
+
     //Debug::printf("Process::Process %p",this);
     id = nextId.getThenAdd(1);
     iDepth = 0;
@@ -97,6 +100,8 @@ Process::Process(const char* name, Table *resources_) :
         resources = new Table(100);
     }
     Resource::ref(resources);
+	AddressSpace *add = new AddressSpace();
+	addressSpaceId = resources->open(add);
 
     /* We always start with a refcount of 1 */
     count.set(1);
@@ -135,7 +140,8 @@ long Process::execv(const char* fileName, SimpleQueue<const char*> *args, long a
     }
 
     /* Prepare address space for exec */
-    addressSpace.exec();
+	AddressSpace *addressSpace = (AddressSpace*)resources->get(addressSpaceId, ResourceType::ADDRESS_SPACE);
+    addressSpace->exec();
 
     /* Copy argc to user space */
     long userESP = 0xfffffff0;
@@ -284,7 +290,8 @@ void Process::dispatch(Process *prev) {
     }
 
     if (this != prev) {
-        addressSpace.activate();
+		AddressSpace *addressSpace = (AddressSpace*)resources->get(addressSpaceId, ResourceType::ADDRESS_SPACE);
+        addressSpace->activate();
         TSS::esp0((uint32_t) &stack[STACK_LONGS]);
         current = this;
         contextSwitch(

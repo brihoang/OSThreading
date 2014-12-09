@@ -142,10 +142,36 @@ execv:
 	int $100
 	ret
 
+	.global clone
+clone:
+	push %ebx
+	push %esi
+	push %edi
+	push %ebp
+	mov $15,%eax
+	mov 20(%esp),%ecx
+	mov $0,%edx
+	int $100
+	.global popBack
+popBack:
+	pop %ebp
+	pop %edi
+	pop %esi
+	pop %ebx
+	ret
+
 	# long getchar()
 	.global getchar
 getchar:
 	mov $14,%eax
 	int $100
 	ret
+
+	# long yield()
+	.global yield
+yield:
+	mov $16, %eax
+	int $100
+	ret
+
 

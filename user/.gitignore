@@ -6,4 +6,5 @@ echo
 gcc
 user.bin
 user.img
+main
 

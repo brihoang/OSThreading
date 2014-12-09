@@ -3,6 +3,7 @@
 #include "idt.h"
 #include "process.h"
 #include "child.h"
+#include "clone.h"
 #include "fs.h"
 #include "err.h"
 #include "u8250.h"
@@ -139,6 +140,30 @@ extern "C" long syscallHandler(uint32_t* context, long num, long a0, long a1) {
         {
               return U8250::it->get();
         }
+	case 15: /* clone */
+		{
+			//void *stack = (void*)a0;
+            uint32_t userPC = context[8];
+            //uint32_t userESP = context[11];
+            Clone *child = new Clone(Process::current);
+
+			void *stack = (void*)context[11];	
+			void *userStack = (void*)(a0 - 4*5);	
+			memcpy(userStack, stack, 20);
+
+            child->pc = userPC;
+			child->esp = (long)userStack;
+            child->eax = 0;
+            long id = Process::current->resources->open(child);
+            child->start();
+
+            return id;
+		}
+	case 16:
+		{
+			Process::current->yield();	
+			return 0;
+		}
     default:
         Process::trace("syscall(%d,%d,%d)",num,a0,a1);
         return -1;
