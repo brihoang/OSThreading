@@ -1,0 +1,68 @@
+Brian Hoang
+Nimish Kumar
+
+Project Description: In our project we implemented a simple threads library 
+which had methods to create threads, yield threads, join threads, and exit.
+
+Background: Previous knolwedge included what we did for processes. Once 
+started, we read about posix threads (pthreads) and decided to model our
+threading library after that. We did not implement every posix compliant
+thread feature  due to time constraints, and not knowing much about some 
+of the features. 
+
+Once we read about pthreads, we also read up on how linux does threads.
+Linux uses the clone system call. This is very similar to fork, but 
+allows the user to choose what resources to have in the child process.
+We modeled our clone after this, but for now, we only added the ability
+to share everything, including memory space. To allow specific resources
+to be copied over, adding a flags parameter would tell the kernel which
+resources to fork and which not to fork. 
+
+We decided to implement our own clone system call to share address spaces.
+At first we just tried making the child have the same pd by using
+
+	this->pd = parent->pd
+
+This did not work. Attempting to run the following basic test code
+
+	long id = clone();
+
+	if(id == 0)
+		puts("child");
+	else
+		puts("parent");
+
+would cause a triple fault. It turned out that this was caused by the fact 
+that the addressSpace of a process was embedded. We decided to make the 
+addressSpace into a pointer. We realized that refcounts would be needed so
+we just added the addressSpace into the resources table. We designed it 
+so that exec would not delete the addressSpace and that there would be
+no way for a process to have multiple address spaces. Furthermore, from
+the user view, an addressSpace is not a resource. 
+
+After doing this, there were still errors. The parent would run succesfully
+but the child would page fault at 0. After tracing the code for a while, we 
+read about the clone system call again. The problem was that the stack of 
+child process was not unique to that of the parent. This is a property
+required by threads also.
+
+The system call was changed to take the parameter
+
+	long clone(long stack);
+
+where stack is a pointer to a stack. In normal use, the user would malloc
+a stack size (in our case we chose one frame 4096 bytes) and then return 
+the end of the allocated stack (this is because our processor interprets
+stacks growing high to low). 
+
+This still caused page faults. After reading through user/sys.S, we saw
+that registers were popped onto the stack. It turns out one of the registers
+was a pointer which was trying to be accessed. Since it was 0 on our new
+stack, it caused a page fault. This was fixed by memcopying the old stack 
+to the new stack. This caused our clone system call to work as expected.
+
+After implementing clone, we implemented a threading library. This used
+the clone system call and allowed the user to pass in function pointers
+to choose where the thread would start. 
+
+During this time, a series of tests were made. 
