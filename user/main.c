@@ -7,6 +7,7 @@ void test(void* args){
 }
 
 int main(){
+    puts("Starting main.c\n");
 	long id = thread_create(test, (void*)0);
 	thread_join(id);
 	for(int i = 0; i < 200; i++){
