@@ -6,7 +6,9 @@ int thread_create(void (*start_routine)(void*), void *args){
 	long id = clone(stack);
 	if(id == 0){
 		nop((long)start_routine);
+        nop((long)args);
 		start_routine(args);	
+        free((void*)(stack - 4092));
 		thread_exit(0);
 	}else{
 		return id;	
