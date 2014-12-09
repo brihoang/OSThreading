@@ -5,6 +5,7 @@ int thread_create(void (*start_routine)(void*), void *args){
 	long stack = (long)malloc(4096) + 4092;
 	long id = clone(stack);
 	if(id == 0){
+		nop((long)start_routine);
 		start_routine(args);	
 		thread_exit(0);
 	}else{
