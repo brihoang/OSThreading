@@ -65,4 +65,6 @@ After implementing clone, we implemented a threading library. This used
 the clone system call and allowed the user to pass in function pointers
 to choose where the thread would start. 
 
-During this time, a series of tests were made. 
+During this time, a series of tests were made. These tests tested things 
+such as basic thread creation, sharing memory space, sharing global 
+variables, and recursive thread creation. 
