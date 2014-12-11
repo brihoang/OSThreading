@@ -14,6 +14,5 @@ extern long readFully(long fd, void* buf, long length);
 
 void memset(void* p, int val, long sz);
 void memcpy(void* dest, void* src, long n);
-extern void nop(long v);
 
 #endif

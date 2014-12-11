@@ -8,9 +8,6 @@ void puts(char* p) {
     char c;
     while ((c = *p++) != 0) putchar(c); 
 }
-void nop(long v){
-
-}
 
 char* gets() {
     long sz = 0;
