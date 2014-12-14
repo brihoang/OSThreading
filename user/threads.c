@@ -18,7 +18,7 @@ long cloning(long* args){
 	return id;
 }
 
-int thread_create(void (*start_routine)(void*), void *args){
+long thread_create(void (*start_routine)(void*), void *args){
 	long *cloning_args = malloc(8);
 
 	cloning_args[0] = (long)start_routine;
@@ -28,14 +28,14 @@ int thread_create(void (*start_routine)(void*), void *args){
 	return ret;
 }
 
-int thread_exit(long exitCode){
+long thread_exit(long exitCode){
 	return exit(exitCode);	
 }
 
-int thread_join(long id){
+long thread_join(long id){
 	return join(id);
 }
 
-int thread_yield(){
+long thread_yield(){
 	return yield();
 }
